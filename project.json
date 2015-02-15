@@ -17,6 +17,7 @@
         "src/globals.js",
         "src/BackgroundLayer.js",
         "src/MyCircle.js",
-        "src/AnimationLayer.js"
+        "src/AnimationLayer.js",
+        "src/model/segment.js"
     ]
 }

@@ -7,23 +7,19 @@ var AnimationLayer = cc.Layer.extend({
     init: function () {
         this._super();
         var draw = new cc.DrawNode();
-        //this.addChild(draw, 10);
+        this.addChild(draw, 10);
         var winSize = cc.director.getWinSize();
         var centerPos = cc.p(winSize.width / 2, winSize.height / 2);
-
-        //drawDot
-       /* draw.drawDot(cc.p(winSize.width / 2, winSize.height / 2), 40, cc.color(0, 0, 255, 128));
-        var points = [cc.p(60, 60), cc.p(70, 70), cc.p(60, 70), cc.p(70, 60)];
-        for (var i = 0; i < points.length; i++) {
-            draw.drawDot(points[i], 4, cc.color(0, 255, 255, 255));
-        }*/
-        //drawCircle
-        draw.drawCircle(cc.p(winSize.width / 2, winSize.height / 2), 100, 0, 100, false, 90, cc.color(0, 255, 0, 255));
-        //fill
-        draw.drawRect(cc.p(120, 220), cc.p(200, 300), cc.color(0, 255, 255, 50), 2, cc.color(128, 128, 0, 255));
-        var circle = new MyCircle(cc.size(200,200));
-        circle.setPosition(centerPos);
-        this.addChild(circle, 10);
+        draw.setDrawColor(cc.color(255,255,255));
+        var edges = [centerPos];
+        var topR = 60;
+        var startAngle = 0;
+        for (var i = 0; i > 90; i++) {
+            edges.push(cc.p(topR * Math.cos(((i + startAngle) * Math.PI) / 180 + centerPos.x),
+                centerPos.y - topR * Math.sin(((i + startAngle) * Math.PI) / 180)));
+        }
+        edges.push(centerPos);
+        draw.drawPoly(edges,cc.color(0,255,255,255),3,cc.color(0,255,255,255));
 
     }
 });
