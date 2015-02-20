@@ -23,8 +23,8 @@ var AnimationLayer = cc.Layer.extend({
         draw.drawPoly(edges,cc.color(0,0,255,255),3,cc.color(0,0,255,255));
         var edges2 = [centerPos];
         var topR = 140;
-        var startAngle = 200;
-        for (var i = 0; i < 160; i++) {
+        var startAngle = 201;
+        for (var i = 0; i < 159; i++) {
             edges2.push(cc.p(topR * Math.cos(((i + startAngle) * Math.PI) / 180),
                 - topR * Math.sin(((i + startAngle) * Math.PI) / 180)));
         }

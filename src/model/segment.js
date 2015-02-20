@@ -5,7 +5,7 @@ var Segment = cc.Class.extend({
     ctor: function (angle, start, radius) {
         this._super();
         this.angle = angle;
-        this.start = startAngle;
+        this.start = start;
         this.radius = radius;
     },
 

@@ -12,12 +12,13 @@
 
     "jsList" : [
         "src/resource.js",
-        "src/app.js",
-        "src/TestScene.js",
         "src/globals.js",
-        "src/BackgroundLayer.js",
         "src/MyCircle.js",
-        "src/AnimationLayer.js",
-        "src/model/segment.js"
+        "src/scene/MainScene.js",
+        "src/scene/GameScene.js",
+        "src/layer/BackgroundLayer.js",
+        "src/layer/AnimationLayer.js",
+        "src/model/segment.js",
+        "src/level/level.js"
     ]
 }

@@ -1,7 +1,4 @@
-/**
- * Created by yam on 2/10/2015.
- */
-var TestScene = cc.Scene.extend({
+var GameScene = cc.Scene.extend({
     space:null,
     gameLayer:null,
 
