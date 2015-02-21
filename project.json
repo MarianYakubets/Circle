@@ -19,6 +19,7 @@
         "src/layer/BackgroundLayer.js",
         "src/layer/AnimationLayer.js",
         "src/model/segment.js",
-        "src/level/level.js"
+        "src/level/level.js",
+        "src/level/stubLevel.js"
     ]
 }

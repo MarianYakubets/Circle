@@ -4,7 +4,6 @@ var Level = cc.Class.extend({
     rules: [],
 
     ctor: function (number, segments, rules) {
-        this._super();
         this.number = number;
         this.segments = segments;
         this.rules = rules;

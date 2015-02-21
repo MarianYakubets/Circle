@@ -1,4 +1,7 @@
 var AnimationLayer = cc.Layer.extend({
+    winSize: null,
+    centerPos: null,
+
     ctor: function () {
         this._super();
         this.init();
@@ -6,30 +9,38 @@ var AnimationLayer = cc.Layer.extend({
 
     init: function () {
         this._super();
-        var draw = new cc.DrawNode();
-        this.addChild(draw, 10);
-        var winSize = cc.director.getWinSize();
-        var centerPos = cc.p(winSize.width / 2, winSize.height / 2);
-        draw.setDrawColor(cc.color(255,255,255));
-        draw.setPosition(centerPos)
-        var edges = [centerPos];
-        var topR = 160;
-        var startAngle = 0;
-        for (var i = 0; i < 200; i++) {
-            edges.push(cc.p(topR * Math.cos(((i + startAngle) * Math.PI) / 180),
-                - topR * Math.sin(((i + startAngle) * Math.PI) / 180)));
-        }
-        edges.push(centerPos);
-        draw.drawPoly(edges,cc.color(0,0,255,255),3,cc.color(0,0,255,255));
-        var edges2 = [centerPos];
-        var topR = 140;
-        var startAngle = 201;
-        for (var i = 0; i < 159; i++) {
-            edges2.push(cc.p(topR * Math.cos(((i + startAngle) * Math.PI) / 180),
-                - topR * Math.sin(((i + startAngle) * Math.PI) / 180)));
-        }
-        edges2.push(centerPos);
-        draw.drawPoly(edges2,cc.color(0,100,255,100),3,cc.color(0,255,0,255));
+        this.winSize = cc.director.getWinSize();
+        this.centerPos = cc.p(this.winSize.width / 2, this.winSize.height / 2);
 
+        var canvas = new cc.DrawNode();
+        canvas.setPosition(this.centerPos);
+        canvas.setAnchorPoint(this.centerPos);
+        canvas.setColor(cc.color(0,128,128,128));
+        this.addChild(canvas, 10);
+
+        this.loadLevel(canvas, new StubLevel());
+    },
+
+    loadLevel: function (canvas, level) {
+        for (var i = 0; i < level.getSegments().length; i++) {
+            this.drawSegment(canvas, level.getSegments()[i]);
+        }
+    },
+
+    drawSegment: function (canvas, segment) {
+        canvas.drawPoly(this.getEdges(segment),cc.color(100,255,100),2,cc.color(255,255,255));
+    },
+
+    getEdges: function (segment) {
+        var edges = [cc.p(0,0)];
+        var radius = segment.getRadius();
+        var start = segment.getStart();
+        var angle = segment.getAngle();
+        for (var i = 0; i < angle; i++) {
+            edges.push(cc.p(radius * Math.cos(((i + start) * Math.PI) / 180),
+                -radius * Math.sin(((i + start) * Math.PI) / 180)));
+        }
+        edges.push(cc.p(0,0));
+        return edges;
     }
 });
