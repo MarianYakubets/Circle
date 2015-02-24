@@ -2,10 +2,12 @@ var Segment = cc.Class.extend({
     angle: 0,
     start: 0,
     radius: 0,
-    ctor: function (start, angle, radius) {
+    type:null,
+    ctor: function (start, angle, radius,type) {
         this.start = start;
         this.angle = angle;
         this.radius = radius;
+        this.type = type;
     },
 
     getAngle: function () {
@@ -22,6 +24,10 @@ var Segment = cc.Class.extend({
 
     getRadius: function () {
         return this.radius;
+    },
+
+    getType: function () {
+        return this.type;
     }
 
 });

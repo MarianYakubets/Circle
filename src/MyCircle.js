@@ -10,8 +10,8 @@ var MyCircle = cc.Node.extend({
         this._center = cc.p(size.width/2,size.height/2);
         this._radius = size.width/2;
         this._drawingUtil = cc._drawingUtil;
-        this._fillColor = cc.color(0,255,0,255);    // alpha is not working
-        this._lineColor = cc.color(255,0,0,255);
+        this._fillColor = cc.type(0,255,0,255);    // alpha is not working
+        this._lineColor = cc.type(255,0,0,255);
     },
     draw:function(ctx){
 

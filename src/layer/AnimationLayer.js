@@ -11,11 +11,9 @@ var AnimationLayer = cc.Layer.extend({
         this._super();
         this.winSize = cc.director.getWinSize();
         this.centerPos = cc.p(this.winSize.width / 2, this.winSize.height / 2);
-
         var canvas = new cc.DrawNode();
         canvas.setPosition(this.centerPos);
         canvas.setAnchorPoint(this.centerPos);
-        canvas.setColor(cc.color(0,128,128,128));
         this.addChild(canvas, 10);
 
         this.loadLevel(canvas, new StubLevel());
@@ -28,19 +26,20 @@ var AnimationLayer = cc.Layer.extend({
     },
 
     drawSegment: function (canvas, segment) {
-        canvas.drawPoly(this.getEdges(segment),cc.color(100,255,100),2,cc.color(255,255,255));
+        canvas.drawPoly(this.getEdges(segment), segment.getType().color, -100, cc.color(255, 255, 255));
     },
 
     getEdges: function (segment) {
-        var edges = [cc.p(0,0)];
+        var edges = [cc.p(0, 0)];
         var radius = segment.getRadius();
         var start = segment.getStart();
         var angle = segment.getAngle();
-        for (var i = 0; i < angle; i++) {
+        for (var i = 0; i <= angle; i++) {
             edges.push(cc.p(radius * Math.cos(((i + start) * Math.PI) / 180),
                 -radius * Math.sin(((i + start) * Math.PI) / 180)));
         }
-        edges.push(cc.p(0,0));
+
+        edges.push(cc.p(0, 0));
         return edges;
     }
 });

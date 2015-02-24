@@ -4,9 +4,9 @@ var StubLevel = Level.extend({
     },
 
     getSegments: function () {
-        this.segments = [new Segment(0,180,70),
-            new Segment(180,90,100),
-            new Segment(270,90,40)];
+        this.segments = [new Segment(0,180,270,Type.BLUE),
+            new Segment(180,90,300,Type.RED),
+            new Segment(270,90,150,Type.GREEN)];
         return this.segments;
     }
 
