@@ -3,6 +3,7 @@ var AnimationLayer = cc.Layer.extend({
     centerPos: null,
     segments: [],
     canvas: null,
+    drawCircle: null,
 
     ctor: function () {
         this._super();
@@ -20,38 +21,36 @@ var AnimationLayer = cc.Layer.extend({
         this.canvas = canvas;
 
         this.segments = (new StubLevel()).getSegments();
-        this.doForEach(this.segments,[this.drawSegment]);
+
+        this.drawCircle = this.draw(canvas);
+        this.doForEach(this.segments, [this.drawCircle]);
 
         this.scheduleUpdate();
     },
 
-    drawSegments: function (segments) {
-        for (var i = 0; i < segments.length; i++) {
-            this.drawSegment(segments[i]);
-        }
-    },
+    draw: function (canvas) {
+        function getEdges(segment) {
+            var edges = [cc.p(0, 0)];
+            var radius = segment.getRadius();
+            var start = segment.getStart();
+            var angle = segment.getAngle();
+            for (var i = 0; i <= angle; i++) {
+                edges.push(cc.p(radius * Math.cos(((i + start) * Math.PI) / 180),
+                    -radius * Math.sin(((i + start) * Math.PI) / 180)));
+            }
 
-    drawSegment: function (segment) {
-        this.canvas.drawPoly(this.getEdges(segment), segment.getType().color, -100, cc.color(255, 255, 255));
-    },
-
-    getEdges: function (segment) {
-        var edges = [cc.p(0, 0)];
-        var radius = segment.getRadius();
-        var start = segment.getStart();
-        var angle = segment.getAngle();
-        for (var i = 0; i <= angle; i++) {
-            edges.push(cc.p(radius * Math.cos(((i + start) * Math.PI) / 180),
-                -radius * Math.sin(((i + start) * Math.PI) / 180)));
+            edges.push(cc.p(0, 0));
+            return edges;
         }
 
-        edges.push(cc.p(0, 0));
-        return edges;
+        return function (segment) {
+            canvas.drawPoly(getEdges(segment), segment.getType().color, -100, cc.color(255, 255, 255));
+        };
     },
 
     update: function (dt) {
         this.canvas.clear();
-        this.doForEach(this.segments,[this.makeStep,this.drawSegment]);
+        this.doForEach(this.segments, [this.makeStep, this.drawCircle]);
     },
 
     doForEach: function (array, functions) {
