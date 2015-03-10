@@ -26,6 +26,8 @@ var AnimationLayer = cc.Layer.extend({
         this.doForEach(this.segments, [this.drawCircle]);
 
         this.scheduleUpdate();
+
+        cc.eventManager.addListener(touchHandler.clone(), canvas);
     },
 
     draw: function (canvas) {
@@ -66,3 +68,12 @@ var AnimationLayer = cc.Layer.extend({
         return segment;
     }
 });
+
+var touchHandler = cc.EventListener.create({
+    event: cc.EventListener.MOUSE,
+    onTouch: function (event) {
+        var target = event.getCurrentTarget();
+        cc.log(event);
+    }
+});
+
