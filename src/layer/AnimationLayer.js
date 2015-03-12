@@ -32,17 +32,24 @@ var AnimationLayer = cc.Layer.extend({
 
     draw: function (canvas) {
         function getEdges(segment) {
-            var edges = [cc.p(0, 0)];
             var radius = segment.getRadius();
             var start = segment.getStart();
             var angle = segment.getAngle();
+            var edges = [calculatePoint(5000, start)];
+            edges.push(calculatePoint(10000, start + angle / 2));
+
+
             for (var i = 0; i <= angle; i++) {
-                edges.push(cc.p(radius * Math.cos(((i + start) * Math.PI) / 180),
-                    -radius * Math.sin(((i + start) * Math.PI) / 180)));
+                edges.push(calculatePoint(radius, i + start));
             }
 
-            edges.push(cc.p(0, 0));
+            edges.push(calculatePoint(5000, start + angle));
             return edges;
+        }
+
+        function calculatePoint(radius, angle) {
+            return cc.p(radius * Math.cos(((angle) * Math.PI) / 180),
+                -radius * Math.sin(((angle) * Math.PI) / 180))
         }
 
         return function (segment) {
