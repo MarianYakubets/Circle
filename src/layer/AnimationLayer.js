@@ -23,11 +23,50 @@ var AnimationLayer = cc.Layer.extend({
         this.segments = (new StubLevel()).getSegments();
 
         this.drawCircle = this.draw(canvas);
-        this.doForEach(this.segments, [this.drawCircle]);
+        //this.doForEach(this.segments, [this.drawCircle]);
 
-        this.scheduleUpdate();
+
+
+        var stencil = this.stencil();
+        stencil.tag = 100;
+        stencil.x = 50;
+        stencil.y = 50;
+
+        var clipper = new cc.ClippingNode();
+        clipper.tag = 101;
+        clipper.anchorX = 0.5;
+        clipper.anchorY = 0.5;
+        clipper.x = this.winSize.width / 2 - 50;
+        clipper.y = this.winSize.height / 2 - 50;
+        clipper.stencil = stencil;
+        this.addChild(clipper);
+
+        var content = this.content();
+        content.x = 50;
+        content.y = 50;
+        clipper.addChild(content);
+
+       // this.scheduleUpdate();
 
         cc.eventManager.addListener(touchHandler.clone(), canvas);
+    },
+
+    actionRotate:function () {
+        return cc.rotateBy(1.0, 90.0).repeatForever();
+    },
+
+    actionScale:function () {
+        var scale = cc.scaleBy(1.33, 1.5);
+        return cc.sequence(scale, scale.reverse()).repeatForever();
+    },
+
+    shape:function () {
+        var shape = new cc.DrawNode();
+        var triangle = [cc.p(-100, -100),cc.p(100, -100), cc.p(0, 100)];
+
+        var green = cc.color(0, 255, 0, 255);
+        shape.drawPoly(triangle, green, 3, green);
+        return shape;
     },
 
     draw: function (canvas) {
