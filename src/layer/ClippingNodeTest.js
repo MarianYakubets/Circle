@@ -1,10 +1,5 @@
-var TAG_TITLELABEL = 1;
-var TAG_SUBTITLELABEL = 2;
 var TAG_STENCILNODE = 100;
 var TAG_CLIPPERNODE = 101;
-var TAG_CONTENTNODE = 102;
-
-var clippingNodeTestSceneIdx = -1;
 
 var BaseClippingNodeTest = BaseTestLayer.extend({
     _title:"",
@@ -13,35 +8,8 @@ var BaseClippingNodeTest = BaseTestLayer.extend({
     ctor:function() {
         this._super(cc.color(0,0,0,255), cc.color(98,99,117,255));
         this.setup();
-    },
-
-    onRestartCallback:function (sender) {
-        var s = new ClippingNodeTestScene();
-        s.addChild(restartClippingNodeTest());
-        director.runScene(s);
-    },
-    onNextCallback:function (sender) {
-        var s = new ClippingNodeTestScene();
-        s.addChild(nextClippingNodeTest());
-        director.runScene(s);
-    },
-    onBackCallback:function (sender) {
-        var s = new ClippingNodeTestScene();
-        s.addChild(previousClippingNodeTest());
-        director.runScene(s);
-    },
-    // automation
-    numberOfPendingTests:function() {
-        return ( (arrayOfClippingNodeTest.length-1) - clippingNodeTestSceneIdx );
-    },
-
-    getTestNumber:function() {
-        return clippingNodeTestSceneIdx;
     }
-
 });
-
-
 
 var BasicTest = BaseClippingNodeTest.extend({
     title:function () {
@@ -73,9 +41,6 @@ var BasicTest = BaseClippingNodeTest.extend({
         content.x = 50;
         content.y = 50;
         clipper.addChild(content);
-        //content.x = 400;
-        //content.y = 225;
-        //this.addChild(content);
     },
 
     actionRotate:function () {
@@ -116,14 +81,6 @@ var BasicTest = BaseClippingNodeTest.extend({
 });
 
 var ShapeTest = BasicTest.extend({
-    title:function () {
-        return "Shape Basic Test";
-    },
-
-    subtitle:function () {
-        return "A DrawNode as stencil and Sprite as content";
-    },
-
     stencil:function () {
         var node = this.shape();
         node.runAction(this.actionRotate());
@@ -137,69 +94,9 @@ var ShapeTest = BasicTest.extend({
     }
 });
 
-var _stencilBits = -1;
-var _alphaThreshold = 0.05;
-var _PLANE_COUNT = 8;
-
-var _planeColor = [
-    cc.color(0, 0, 0, 166),
-    cc.color(179, 0, 0, 153),
-    cc.color(0, 179, 0, 140),
-    cc.color(0, 0, 179, 128),
-    cc.color(179, 179, 0, 115),
-    cc.color(0, 179, 179, 102),
-    cc.color(179, 0, 179, 89),
-    cc.color(179, 179, 179, 77)
-];
-
-var arrayOfClippingNodeTest = [
-    ShapeTest];
-
-
-if (!cc.sys.isNative && ("opengl" in cc.sys.capabilities)) {
-    arrayOfClippingNodeTest.push(
-        //TODO re-open them later.
-        /*    RawStencilBufferTest,
-         RawStencilBufferTest2,
-         RawStencilBufferTest3,
-         RawStencilBufferTest4,
-         RawStencilBufferTest5,
-         RawStencilBufferTest6*/
-    );
-}
-
-var nextClippingNodeTest = function () {
-    clippingNodeTestSceneIdx++;
-    clippingNodeTestSceneIdx = clippingNodeTestSceneIdx % arrayOfClippingNodeTest.length;
-
-    if(window.sideIndexBar){
-        clippingNodeTestSceneIdx = window.sideIndexBar.changeTest(clippingNodeTestSceneIdx, 5);
-    }
-
-    return new arrayOfClippingNodeTest[clippingNodeTestSceneIdx]();
-};
-
-var previousClippingNodeTest = function () {
-    clippingNodeTestSceneIdx--;
-    if (clippingNodeTestSceneIdx < 0)
-        clippingNodeTestSceneIdx += arrayOfClippingNodeTest.length;
-
-    if(window.sideIndexBar){
-        clippingNodeTestSceneIdx = window.sideIndexBar.changeTest(clippingNodeTestSceneIdx, 5);
-    }
-
-    return new arrayOfClippingNodeTest[clippingNodeTestSceneIdx]();
-};
-
-var restartClippingNodeTest = function () {
-    return new arrayOfClippingNodeTest[clippingNodeTestSceneIdx]();
-};
-
 var ClippingNodeTestScene = TestScene.extend({
     runThisTest:function (num) {
-        clippingNodeTestSceneIdx = (num || num == 0) ? (num - 1) : -1;
         cc.director.runScene(this);
-	    var layer = nextClippingNodeTest();
-	    this.addChild(layer);
+        this.addChild(new ShapeTest());
     }
 });
