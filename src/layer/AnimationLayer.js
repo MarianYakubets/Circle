@@ -27,7 +27,7 @@ var AnimationLayer = cc.Layer.extend({
 
 
 
-        var stencil = this.stencil();
+        var stencil = this.shape();
         stencil.tag = 100;
         stencil.x = 50;
         stencil.y = 50;
@@ -41,7 +41,7 @@ var AnimationLayer = cc.Layer.extend({
         clipper.stencil = stencil;
         this.addChild(clipper);
 
-        var content = this.content();
+        var content = new cc.Sprite(g_resources.HelloWorld_png);
         content.x = 50;
         content.y = 50;
         clipper.addChild(content);
