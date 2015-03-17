@@ -1,26 +1,26 @@
 {
-    "project_type": "javascript",
-
-    "debugMode" : 1,
-    "showFPS" : true,
-    "frameRate" : 60,
-    "id" : "gameCanvas",
-    "renderMode" : 0,
-    "engineDir":"frameworks/cocos2d-html5",
-
-    "modules" : ["cocos2d","chipmunk"],
-
-    "jsList" : [
-        "src/resource.js",
-        "src/globals.js",
-        "src/MyCircle.js",
-        "src/scene/MainScene.js",
-        "src/scene/GameScene.js",
-        "src/layer/BackgroundLayer.js",
-        "src/layer/AnimationLayer.js",
-        "src/model/segment.js",
-        "src/model/type.js",
-        "src/level/level.js",
-        "src/level/stubLevel.js"
-    ]
+  "project_type": "javascript",
+  "debugMode": 1,
+  "showFPS": true,
+  "frameRate": 60,
+  "id": "gameCanvas",
+  "renderMode": 0,
+  "engineDir": "frameworks/cocos2d-html5",
+  "modules": [
+    "cocos2d",
+    "chipmunk"
+  ],
+  "jsList": [
+    "src/resource.js",
+    "src/globals.js",
+    "src/MyCircle.js",
+    "src/scene/MainScene.js",
+    "src/scene/GameScene.js",
+    "src/layer/BackgroundLayer.js",
+    "src/layer/AnimationLayer.js",
+    "src/model/segment.js",
+    "src/model/type.js",
+    "src/level/level.js",
+    "src/level/stubLevel.js"
+  ]
 }
