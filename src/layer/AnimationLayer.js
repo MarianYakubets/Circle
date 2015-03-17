@@ -23,8 +23,7 @@ var AnimationLayer = cc.Layer.extend({
         this.segments = (new StubLevel()).getSegments();
 
         this.drawCircle = this.draw(canvas);
-        //this.doForEach(this.segments, [this.drawCircle]);
-
+        this.doForEach(this.segments, [this.drawCircle]);
 
 
         var stencil = this.shape();
@@ -46,23 +45,23 @@ var AnimationLayer = cc.Layer.extend({
         content.y = 50;
         clipper.addChild(content);
 
-       // this.scheduleUpdate();
+        this.scheduleUpdate();
 
         cc.eventManager.addListener(touchHandler.clone(), canvas);
     },
 
-    actionRotate:function () {
+    actionRotate: function () {
         return cc.rotateBy(1.0, 90.0).repeatForever();
     },
 
-    actionScale:function () {
+    actionScale: function () {
         var scale = cc.scaleBy(1.33, 1.5);
         return cc.sequence(scale, scale.reverse()).repeatForever();
     },
 
-    shape:function () {
+    shape: function () {
         var shape = new cc.DrawNode();
-        var triangle = [cc.p(-100, -100),cc.p(100, -100), cc.p(0, 100)];
+        var triangle = [cc.p(-100, -100), cc.p(100, -100), cc.p(0, 100)];
 
         var green = cc.color(0, 255, 0, 255);
         shape.drawPoly(triangle, green, 3, green);
@@ -74,15 +73,12 @@ var AnimationLayer = cc.Layer.extend({
             var radius = segment.getRadius();
             var start = segment.getStart();
             var angle = segment.getAngle();
-            var edges = [calculatePoint(5000, start)];
-            edges.push(calculatePoint(10000, start + angle / 2));
-
-
+            var edges = [cc.p(0, 0)];
             for (var i = 0; i <= angle; i++) {
                 edges.push(calculatePoint(radius, i + start));
             }
 
-            edges.push(calculatePoint(5000, start + angle));
+            edges.push(cc.p(0, 0));
             return edges;
         }
 
@@ -110,7 +106,7 @@ var AnimationLayer = cc.Layer.extend({
     },
 
     makeStep: function (segment) {
-        segment.setRadius(segment.getRadius() + 1);
+        segment.setRadius(segment.getRadius() + .1);
         return segment;
     }
 });
