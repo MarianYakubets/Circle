@@ -18,6 +18,7 @@
     "src/scene/GameScene.js",
     "src/layer/BackgroundLayer.js",
     "src/layer/AnimationLayer.js",
+    "src/layer/ClippingNodeTest.js",
     "src/model/segment.js",
     "src/model/type.js",
     "src/level/level.js",
