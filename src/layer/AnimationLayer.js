@@ -2,7 +2,7 @@ var AnimationLayer = cc.Layer.extend({
     winSize: null,
     centerPos: null,
     segments: [],
-    canvas: null,
+    segmentsMask: null,
     drawCircle: null,
 
     ctor: function () {
@@ -14,43 +14,42 @@ var AnimationLayer = cc.Layer.extend({
         this._super();
         this.winSize = cc.director.getWinSize();
         this.centerPos = cc.p(this.winSize.width / 2, this.winSize.height / 2);
-        var canvas = new cc.DrawNode();
-        canvas.setPosition(this.centerPos);
-        canvas.setAnchorPoint(this.centerPos);
-        this.addChild(canvas, 10);
-        this.canvas = canvas;
-
         this.segments = (new StubLevel()).getSegments();
 
-        this.drawCircle = this.draw(canvas);
-        this.doForEach(this.segments, [this.drawCircle]);
+        var maskLayer = new cc.DrawNode();
+
+        var segmentsMask = new cc.DrawNode();
+        segmentsMask.setPosition(this.centerPos);
+        segmentsMask.setAnchorPoint(this.centerPos);
+        maskLayer.addChild(segmentsMask, -10);
+        this.addChild(maskLayer);
+        this.segmentsMask = segmentsMask;
+        this.drawLines(maskLayer, this.segments);
+
+
+        this.drawCircle = this.draw(segmentsMask);
 
         var clippingNode = new cc.ClippingNode();
-        clippingNode.anchorX = 0.5;
-        clippingNode.anchorY = 0.5;
-        clippingNode.x = this.winSize.width / 2 - 50;
-        clippingNode.y = this.winSize.height / 2 - 50;
-        clippingNode.stencil = this.canvas;
+        clippingNode.setPosition(this.centerPos);
+        clippingNode.setAnchorPoint(this.centerPos);
+        clippingNode.stencil = maskLayer;
         clippingNode.setInverted(true);
         this.addChild(clippingNode);
 
-        var background = new cc.Sprite(res.micro_jpg);
+        var background = new cc.Sprite(res.circles_jpg);
         background.x = 50;
         background.y = 50;
         clippingNode.addChild(background);
 
         this.scheduleUpdate();
 
-        cc.eventManager.addListener(touchHandler.clone(), canvas);
+        cc.eventManager.addListener(touchHandler.clone(), segmentsMask);
     },
 
-    actionRotate: function () {
-        return cc.rotateBy(1.0, 90.0).repeatForever();
-    },
-
-    actionScale: function () {
-        var scale = cc.scaleBy(1.33, 1.5);
-        return cc.sequence(scale, scale.reverse()).repeatForever();
+    drawLines: function (canvas, segments) {
+        for (var i = 0; i < segments.length; i++) {
+            canvas.drawSegment(cc.p(0, 0), this.calculatePoint(1000, segments[i].getAngle() + segments[i].getStart()), 3, cc.color(255, 255, 255));
+        }
     },
 
     draw: function (canvas) {
@@ -78,9 +77,15 @@ var AnimationLayer = cc.Layer.extend({
     },
 
     update: function (dt) {
-        this.canvas.clear();
+        this.segmentsMask.clear();
         this.doForEach(this.segments, [this.makeStep, this.drawCircle]);
     },
+
+    calculatePoint: function (radius, angle) {
+        return cc.p(radius * Math.cos(((angle) * Math.PI) / 180),
+            -radius * Math.sin(((angle) * Math.PI) / 180))
+    },
+
 
     doForEach: function (array, functions) {
         for (var i = 0; i < array.length; i++) {
@@ -91,7 +96,7 @@ var AnimationLayer = cc.Layer.extend({
     },
 
     makeStep: function (segment) {
-        segment.setRadius(segment.getRadius() - .1);
+        segment.setRadius(segment.getRadius() - segment.getSpeed());
         return segment;
     }
 });

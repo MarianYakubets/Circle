@@ -19,5 +19,14 @@ var BackgroundLayer = cc.Layer.extend({
         layer.y = centerPos.y;
 
         this.addChild(layer);
+    },
+
+    actionRotate: function () {
+        return cc.rotateBy(1.0, 90.0).repeatForever();
+    },
+
+    actionScale: function () {
+        var scale = cc.scaleBy(1.33, 1.5);
+        return cc.sequence(scale, scale.reverse()).repeatForever();
     }
 });
