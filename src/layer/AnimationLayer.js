@@ -17,17 +17,19 @@ var AnimationLayer = cc.Layer.extend({
         this.segments = (new StubLevel()).getSegments();
 
         var maskLayer = new cc.DrawNode();
+        //maskLayer.setPosition(this.centerPos);
+        //maskLayer.setAnchorPoint(this.centerPos);
 
         var segmentsMask = new cc.DrawNode();
-        segmentsMask.setPosition(this.centerPos);
-        segmentsMask.setAnchorPoint(this.centerPos);
-        maskLayer.addChild(segmentsMask, -10);
-        this.addChild(maskLayer);
-        this.segmentsMask = segmentsMask;
-        this.drawLines(maskLayer, this.segments);
+        maskLayer.addChild(segmentsMask, 10);
 
+        var lineMask = new cc.DrawNode();
+        maskLayer.addChild(lineMask, 9);
+
+        this.drawLines(lineMask, this.segments);
 
         this.drawCircle = this.draw(segmentsMask);
+        this.segmentsMask = segmentsMask;
 
         var clippingNode = new cc.ClippingNode();
         clippingNode.setPosition(this.centerPos);
@@ -36,13 +38,15 @@ var AnimationLayer = cc.Layer.extend({
         clippingNode.setInverted(true);
         this.addChild(clippingNode);
 
+        var visibleLines = new cc.DrawNode();
+        visibleLines.setPosition(this.centerPos);
+        this.drawLines(visibleLines, this.segments);
+        this.addChild(visibleLines);
+
         var background = new cc.Sprite(res.circles_jpg);
-        background.x = 50;
-        background.y = 50;
         clippingNode.addChild(background);
 
         this.scheduleUpdate();
-
         cc.eventManager.addListener(touchHandler.clone(), segmentsMask);
     },
 
