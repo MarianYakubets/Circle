@@ -17,10 +17,11 @@ var BasicTest = cc.Layer.extend({
         clippingNode.x = winSize.width / 2 - 50;
         clippingNode.y = winSize.height / 2 - 50;
         clippingNode.stencil = mask;
+        clippingNode.setInverted(true);
         this.addChild(clippingNode);
 
         var background = new cc.Sprite(res.HelloWorld_png);
-        background.runAction(this.actionScale());
+       // background.runAction(this.actionScale());
         background.x = 50;
         background.y = 50;
         clippingNode.addChild(background);

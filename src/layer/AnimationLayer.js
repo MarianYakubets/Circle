@@ -25,25 +25,19 @@ var AnimationLayer = cc.Layer.extend({
         this.drawCircle = this.draw(canvas);
         this.doForEach(this.segments, [this.drawCircle]);
 
+        var clippingNode = new cc.ClippingNode();
+        clippingNode.anchorX = 0.5;
+        clippingNode.anchorY = 0.5;
+        clippingNode.x = this.winSize.width / 2 - 50;
+        clippingNode.y = this.winSize.height / 2 - 50;
+        clippingNode.stencil = this.canvas;
+        clippingNode.setInverted(true);
+        this.addChild(clippingNode);
 
-        var stencil = this.shape();
-        stencil.tag = 100;
-        stencil.x = 50;
-        stencil.y = 50;
-
-        var clipper = new cc.ClippingNode();
-        clipper.tag = 101;
-        clipper.anchorX = 0.5;
-        clipper.anchorY = 0.5;
-        clipper.x = this.winSize.width / 2 - 50;
-        clipper.y = this.winSize.height / 2 - 50;
-        clipper.stencil = stencil;
-        this.addChild(clipper);
-
-        var content = new cc.Sprite(g_resources.HelloWorld_png);
-        content.x = 50;
-        content.y = 50;
-        clipper.addChild(content);
+        var background = new cc.Sprite(res.micro_jpg);
+        background.x = 50;
+        background.y = 50;
+        clippingNode.addChild(background);
 
         this.scheduleUpdate();
 
@@ -57,15 +51,6 @@ var AnimationLayer = cc.Layer.extend({
     actionScale: function () {
         var scale = cc.scaleBy(1.33, 1.5);
         return cc.sequence(scale, scale.reverse()).repeatForever();
-    },
-
-    shape: function () {
-        var shape = new cc.DrawNode();
-        var triangle = [cc.p(-100, -100), cc.p(100, -100), cc.p(0, 100)];
-
-        var green = cc.color(0, 255, 0, 255);
-        shape.drawPoly(triangle, green, 3, green);
-        return shape;
     },
 
     draw: function (canvas) {
@@ -106,7 +91,7 @@ var AnimationLayer = cc.Layer.extend({
     },
 
     makeStep: function (segment) {
-        segment.setRadius(segment.getRadius() + .1);
+        segment.setRadius(segment.getRadius() - .1);
         return segment;
     }
 });
@@ -118,4 +103,3 @@ var touchHandler = cc.EventListener.create({
         cc.log(event);
     }
 });
-
