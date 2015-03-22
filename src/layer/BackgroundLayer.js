@@ -14,7 +14,6 @@ var BackgroundLayer = cc.Layer.extend({
         layer.ignoreAnchor = false;
         layer.anchorX = 0.5;
         layer.anchorY = 0.5;
-        //layer.setContentSize(winSize.width ,  winSize.height);
         layer.x = centerPos.x;
         layer.y = centerPos.y;
 

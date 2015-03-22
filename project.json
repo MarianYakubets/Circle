@@ -21,6 +21,7 @@
     "src/model/segment.js",
     "src/model/type.js",
     "src/level/level.js",
-    "src/level/stubLevel.js"
+    "src/level/stubLevel.js",
+    "src/utils/Utils.js"
   ]
 }
