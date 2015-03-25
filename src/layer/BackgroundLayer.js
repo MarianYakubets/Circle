@@ -9,7 +9,7 @@ var BackgroundLayer = cc.Layer.extend({
         var winSize = cc.director.getWinSize();
         var centerPos = cc.p(winSize.width / 2, winSize.height / 2);
 
-        var layer = new cc.LayerColor(cc.color(91, 204, 255, 128));
+        var layer = new cc.LayerColor(cc.color(34, 139, 34, 128));
 
         layer.ignoreAnchor = false;
         layer.anchorX = 0.5;

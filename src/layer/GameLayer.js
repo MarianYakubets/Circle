@@ -1,7 +1,6 @@
-var AnimationLayer = cc.Layer.extend({
-    centerPos: null,
+var GameLayer = cc.Layer.extend({
     segments: [],
-    segmentsMask: null,
+    mask: null,
     drawCircle: null,
 
     ctor: function () {
@@ -11,35 +10,22 @@ var AnimationLayer = cc.Layer.extend({
 
     init: function () {
         this._super();
-        var winSize = cc.director.getWinSize();
-        this.centerPos = cc.p(winSize.width / 2, winSize.height / 2);
         this.segments = (new StubLevel()).getSegments();
+        var winSize = cc.director.getWinSize();
+        var centerPos = cc.p(winSize.width / 2, winSize.height / 2);
 
-        var maskLayer = new cc.DrawNode();
-
-        var segmentsMask = new cc.DrawNode();
-        maskLayer.addChild(segmentsMask, 10);
-
-        this.drawCircle = this.draw(segmentsMask);
-        this.segmentsMask = segmentsMask;
-
-        var clippingNode = new cc.ClippingNode();
-        clippingNode.setPosition(this.centerPos);
-        clippingNode.setAnchorPoint(this.centerPos);
-        clippingNode.stencil = maskLayer;
-        clippingNode.setInverted(true);
-        this.addChild(clippingNode);
+        var circle = new CircleNode();
+        this.addChild(circle);
+        this.mask = circle.mask;
+        this.drawCircle = this.draw(this.mask);
 
         var visibleLines = new cc.DrawNode();
-        visibleLines.setPosition(this.centerPos);
+        visibleLines.setPosition(centerPos);
         this.drawLines(visibleLines, this.segments);
         this.addChild(visibleLines);
 
-        var background = new cc.Sprite(res.circles_jpg);
-        clippingNode.addChild(background);
-
         this.scheduleUpdate();
-        cc.eventManager.addListener(touchHandler.clone(), segmentsMask);
+        cc.eventManager.addListener(listener, this);
     },
 
     drawLines: function (canvas, segments) {
@@ -68,7 +54,7 @@ var AnimationLayer = cc.Layer.extend({
     },
 
     update: function (dt) {
-        this.segmentsMask.clear();
+        this.mask.clear();
         Utils.doForEach(this.segments, [this.makeStep, this.drawCircle]);
     },
 
@@ -78,10 +64,33 @@ var AnimationLayer = cc.Layer.extend({
     }
 });
 
-var touchHandler = cc.EventListener.create({
-    event: cc.EventListener.MOUSE,
-    onTouch: function (event) {
+// Make sprite1 touchable
+var listener = cc.EventListener.create({
+    event: cc.EventListener.TOUCH_ONE_BY_ONE,
+    swallowTouches: true,
+    onTouchBegan: function (touch, event) {
         var target = event.getCurrentTarget();
-        cc.log(event);
+
+        var locationInNode = target.convertToNodeSpace(touch.getLocation());
+        var s = target.getContentSize();
+        var rect = cc.rect(0, 0, s.width, s.height);
+
+        if (cc.rectContainsPoint(rect, locationInNode)) {
+            cc.log("sprite began... x = " + locationInNode.x + ", y = " + locationInNode.y);
+            target.opacity = 180;
+            return true;
+        }
+        return false;
+    },
+    onTouchMoved: function (touch, event) {
+        var target = event.getCurrentTarget();
+        var delta = touch.getDelta();
+        target.x += delta.x;
+        target.y += delta.y;
+    },
+    onTouchEnded: function (touch, event) {
+        var target = event.getCurrentTarget();
+        cc.log("sprite onTouchesEnded.. ");
+        target.setOpacity(255);
     }
 });

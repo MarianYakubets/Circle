@@ -2,7 +2,7 @@ var res = {
     HelloWorld_png : "res/HelloWorld.png",
     CloseNormal_png : "res/CloseNormal.png",
     CloseSelected_png : "res/CloseSelected.png",
-    circles_jpg : "res/circles.jpg",
+    circles_jpg : "res/big-green-circle.png",
     micro_jpg : "res/micro.jpg"
 };
 

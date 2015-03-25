@@ -6,7 +6,7 @@ var GameScene = cc.Scene.extend({
         this._super();
         this.gameLayer = new cc.Layer();
         this.gameLayer.addChild(new BackgroundLayer(), 0, TagOfLayer.background);
-        this.gameLayer.addChild(new AnimationLayer(), 1, TagOfLayer.Animation);
+        this.gameLayer.addChild(new GameLayer(), 1, TagOfLayer.Animation);
         this.addChild(this.gameLayer);
     }
 });
