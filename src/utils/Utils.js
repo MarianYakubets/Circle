@@ -10,5 +10,20 @@ var Utils = {
                 functions[j](array[i]);
             }
         }
+    },
+
+    getSegmentEdges: function (segment) {
+        return Utils.getEdges(segment, segment.getRadius());
+    },
+
+    getEdges: function (segment, radius) {
+        var start = segment.getStart();
+        var angle = segment.getAngle();
+        var edges = [cc.p(0, 0)];
+        for (var i = 0; i <= angle; i++) {
+            edges.push(Utils.calculateCirclePoint(radius, i + start));
+        }
+        edges.push(cc.p(0, 0));
+        return edges;
     }
 };

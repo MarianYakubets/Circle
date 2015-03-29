@@ -15,6 +15,10 @@ var GameLayer = cc.Layer.extend({
         var centerPos = cc.p(winSize.width / 2, winSize.height / 2);
 
         var circle = new CircleNode();
+        var winSize = cc.director.getWinSize();
+        var centerPos = cc.p(winSize.width / 2, winSize.height / 2);
+        circle.setPosition(centerPos);
+        circle.setAnchorPoint(centerPos);
         this.addChild(circle);
         this.mask = circle.mask;
         this.drawCircle = this.draw(this.mask);
@@ -24,8 +28,17 @@ var GameLayer = cc.Layer.extend({
         this.drawLines(visibleLines, this.segments);
         this.addChild(visibleLines);
 
+        var blink;
+        for (var i = 0; i < this.segments.length; i++) {
+            blink = new BlinkSegment(this.segments[i]);
+            blink.setPosition(centerPos);
+            blink.setAnchorPoint(centerPos);
+            this.addChild(blink);
+            cc.eventManager.addListener(listener.clone(), blink);
+
+        }
+
         this.scheduleUpdate();
-        cc.eventManager.addListener(listener, this);
     },
 
     drawLines: function (canvas, segments) {
@@ -35,21 +48,8 @@ var GameLayer = cc.Layer.extend({
     },
 
     draw: function (canvas) {
-        function getEdges(segment) {
-            var radius = segment.getRadius();
-            var start = segment.getStart();
-            var angle = segment.getAngle();
-            var edges = [cc.p(0, 0)];
-            for (var i = 0; i <= angle; i++) {
-                edges.push(Utils.calculateCirclePoint(radius, i + start));
-            }
-
-            edges.push(cc.p(0, 0));
-            return edges;
-        }
-
         return function (segment) {
-            canvas.drawPoly(getEdges(segment), segment.getType().color, -100, cc.color(255, 255, 255));
+            canvas.drawPoly(Utils.getSegmentEdges(segment), segment.getType().color, -100, cc.color(255, 255, 255));
         };
     },
 
@@ -64,33 +64,19 @@ var GameLayer = cc.Layer.extend({
     }
 });
 
-// Make sprite1 touchable
 var listener = cc.EventListener.create({
     event: cc.EventListener.TOUCH_ONE_BY_ONE,
     swallowTouches: true,
     onTouchBegan: function (touch, event) {
         var target = event.getCurrentTarget();
-
-        var locationInNode = target.convertToNodeSpace(touch.getLocation());
-        var s = target.getContentSize();
-        var rect = cc.rect(0, 0, s.width, s.height);
-
-        if (cc.rectContainsPoint(rect, locationInNode)) {
-            cc.log("sprite began... x = " + locationInNode.x + ", y = " + locationInNode.y);
-            target.opacity = 180;
-            return true;
-        }
-        return false;
+        target.blink();
+        return true;
     },
     onTouchMoved: function (touch, event) {
-        var target = event.getCurrentTarget();
-        var delta = touch.getDelta();
-        target.x += delta.x;
-        target.y += delta.y;
+
     },
+
     onTouchEnded: function (touch, event) {
-        var target = event.getCurrentTarget();
-        cc.log("sprite onTouchesEnded.. ");
-        target.setOpacity(255);
+
     }
 });
