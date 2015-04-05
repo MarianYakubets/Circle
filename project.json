@@ -17,7 +17,7 @@
     "src/scene/MainScene.js",
     "src/scene/GameScene.js",
     "src/graphics/CircleNode.js",
-    "src/graphics/BlinkSegment.js",
+    "src/graphics/Blink.js",
     "src/layer/BackgroundLayer.js",
     "src/layer/GameLayer.js",
     "src/model/segment.js",

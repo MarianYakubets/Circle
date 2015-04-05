@@ -1,5 +1,6 @@
 var GameLayer = cc.Layer.extend({
     segments: [],
+    blinks: [],
     mask: null,
     drawCircle: null,
 
@@ -11,39 +12,38 @@ var GameLayer = cc.Layer.extend({
     init: function () {
         this._super();
         this.segments = (new StubLevel()).getSegments();
-        var winSize = cc.director.getWinSize();
-        var centerPos = cc.p(winSize.width / 2, winSize.height / 2);
 
-        var circle = new CircleNode();
-        var winSize = cc.director.getWinSize();
-        var centerPos = cc.p(winSize.width / 2, winSize.height / 2);
-        circle.setPosition(centerPos);
-        circle.setAnchorPoint(centerPos);
+        var circle = new cc.DrawNode();
+        circle.setPosition(Dim.center);
+        circle.setAnchorPoint(Dim.center);
         this.addChild(circle);
-        this.mask = circle.mask;
-        this.drawCircle = this.draw(this.mask);
+        this.mask = circle;
+        this.drawCircle = this.draw(circle);
+
+
 
         var visibleLines = new cc.DrawNode();
-        visibleLines.setPosition(centerPos);
+        visibleLines.setPosition(Dim.center);
         this.drawLines(visibleLines, this.segments);
         this.addChild(visibleLines);
 
         var blink;
         for (var i = 0; i < this.segments.length; i++) {
-            blink = new BlinkSegment(this.segments[i]);
-            blink.setPosition(centerPos);
-            blink.setAnchorPoint(centerPos);
+            blink = new Blink(this.segments[i]);
+            blink.setPosition(Dim.center);
+            blink.setAnchorPoint(Dim.center);
             this.addChild(blink);
-            cc.eventManager.addListener(listener.clone(), blink);
-
+            this.blinks.push(blink);
         }
 
+        cc.eventManager.addListener(listener.clone(), this);
         this.scheduleUpdate();
     },
 
     drawLines: function (canvas, segments) {
         for (var i = 0; i < segments.length; i++) {
-            canvas.drawSegment(cc.p(0, 0), Utils.calculateCirclePoint(1000, segments[i].getAngle() + segments[i].getStart()), 3, cc.color(255, 255, 255));
+            canvas.drawSegment(Utils.calculateCirclePoint(50, segments[i].getAngle() + segments[i].getStart()),
+                Utils.calculateCirclePoint(1000, segments[i].getAngle() + segments[i].getStart()), 1, cc.color(255, 255, 255));
         }
     },
 
@@ -55,7 +55,8 @@ var GameLayer = cc.Layer.extend({
 
     update: function (dt) {
         this.mask.clear();
-        Utils.doForEach(this.segments, [this.makeStep, this.drawCircle]);
+        this.segments.forEach(this.makeStep);
+        this.segments.forEach(this.drawCircle);
     },
 
     makeStep: function (segment) {
@@ -69,9 +70,31 @@ var listener = cc.EventListener.create({
     swallowTouches: true,
     onTouchBegan: function (touch, event) {
         var target = event.getCurrentTarget();
-        target.blink();
+
+        var p = touch.getLocation();
+        var delx = p.x - Dim.center.x;
+        var dely = p.y - Dim.center.y;
+        var rad = Math.atan2(delx, dely);
+        var deg = rad * (180 / Math.PI);
+        deg -= 90;
+        if (deg < 0)
+            deg += 360;
+
+
+        for (var i = 0; i < target.segments.length; i++) {
+            var segment = target.segments[i];
+            if (segment.getStart() < deg &&
+                (deg - segment.getStart()) < segment.getAngle()) {
+                target.blinks[i].blink();
+
+                segment.setRadius(segment.getRadius()+5);
+                break;
+            }
+        }
+
         return true;
     },
+
     onTouchMoved: function (touch, event) {
 
     },

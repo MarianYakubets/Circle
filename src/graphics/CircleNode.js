@@ -5,6 +5,7 @@ var CircleNode =  cc.ClippingNode.extend({
         this._super();
         this.init();
     },
+
     init:function(){
         this._super();
         this.setInverted(true);

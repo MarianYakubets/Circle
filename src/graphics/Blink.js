@@ -1,11 +1,11 @@
-var BlinkSegment = cc.Node.extend({
-    white: cc.color(255, 255, 255, 100),
-    segment: null,
+var Blink = cc.Node.extend({
+    whiteWithAlpha: cc.color(255, 255, 255, 100),
     canvas: null,
+
     ctor: function (segment) {
         this._super();
         this.canvas = new cc.DrawNode();
-        this.canvas.drawPoly(Utils.getEdges(segment, 1000), this.white, -100, this.white);
+        this.canvas.drawPoly(Utils.getEdges(segment, Dim.width / 2), this.whiteWithAlpha, -100, this.whiteWithAlpha);
     },
 
     blink: function () {
